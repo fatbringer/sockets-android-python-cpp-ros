@@ -1,28 +1,8 @@
-/** @file telemetry_node.cpp
- *  @version 4.0
- *  @date May 2020
+/** 
  *
- *  @brief sample node of telemetry.
+ *  Modified from dji osdk for telemetry 
  *
- *  @Copyright (c) 2020 DJI
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
  *
  */
 
@@ -338,141 +318,10 @@ int main(int argc ,char** argv) {
   int count = 0;
   while (count < 15 )
   {
-  //  std::cout << "Counter = " << elapsedTimeInS << ":\n";
-  //  std::cout << "-------\n";
-/* 
-    ROS_INFO("battery Info :");
-    ROS_INFO("battery's capacity: %f", battery_state_.capacity);
-    ROS_INFO("battery's voltage: %f", battery_state_.voltage);
-    ROS_INFO("battery's current: %f", battery_state_.current);
-    ROS_INFO("battery's percentage : %f\n", battery_state_.percentage);
-
-    ROS_INFO("height above takeoff:");
-    ROS_INFO("height_above_takeoff_ :%f\n", height_above_takeoff_.data);
-    ROS_INFO("gimbalAngleData:");
-    ROS_INFO("gimbal_angle_data_(x,y,z) :%f, %f, %f\n", gimbal_angle_data_.vector.x, gimbal_angle_data_.vector.y,
-              gimbal_angle_data_.vector.z);
-    ROS_INFO("rcData(here only print basic data):");
-    if (rc_data_.axes.size() >= 4)
-    {
-       ROS_INFO("rc_data_(roll,pitch,yaw, throttle) :%f, %f, %f, %f\n", rc_data_.axes[0], rc_data_.axes[1],
-                 rc_data_.axes[2], rc_data_.axes[3]);
-    }
-
-    ROS_INFO("gps Position:");
-    ROS_INFO("gps_position_(latitude, longitude, altitude) :%f, %f, %f \n",
-              gps_position_.latitude, gps_position_.longitude, gps_position_.altitude);
-    ROS_INFO("gps Health:");
-    ROS_INFO("gps_health_ :%d \n", gps_health_.data);
-    ROS_INFO("flight Info :");
-    ROS_INFO("flight_status_: %d\n",flight_status_.data);
-    ROS_INFO("localPosition:");
-    ROS_INFO("local_position_(x,y,z) :%f, %f, %f\n", local_position_.point.x, local_position_.point.y,
-              local_position_.point.z);
-    ROS_INFO("imu Info :");
-    ROS_INFO("imu w: %f",imu_data_.orientation.w);
-    ROS_INFO("imu x: %f",imu_data_.orientation.x);
-    ROS_INFO("imu y: %f",imu_data_.orientation.y);
-    ROS_INFO("imu z: %f\n",imu_data_.orientation.z);
-    ROS_INFO("imu linear acceleration x: %f", imu_data_.linear_acceleration.x);
-    ROS_INFO("imu linear acceleration y: %f", imu_data_.linear_acceleration.y);
-    ROS_INFO("imu linear acceleration z: %f", imu_data_.linear_acceleration.z);
-    ROS_INFO("fromMobileData:");
-    if (from_mobile_data_.data.size() > 1)
-    {
-      ROS_INFO("from_mobile_data_(0,1....) :%d, %d\n", from_mobile_data_.data[0], from_mobile_data_.data[1]);
-    }
-
-    ROS_INFO("fromPayloadData:");
-    if (from_payload_data_.data.size() > 1)
-    {
-      ROS_INFO("from_payload_data_(0,1....) :%d, %d\n", from_payload_data_.data[0], from_payload_data_.data[1]);
-    }
-    auto local_frame_ref_client = nh.serviceClient<dji_osdk_ros::SetLocalPosRef>("set_local_pos_reference");
-    dji_osdk_ros::SetLocalPosRef local_frame_ref;
-    local_frame_ref_client.call(local_frame_ref);
-    if (local_frame_ref.response.result)
-    {
-       ROS_INFO("localFrameRef:");
-       ROS_INFO("local_Frame_ref_(latitude, longitude, altitude) :%f, %f, %f\n ",
-       local_Frame_ref_.latitude, local_Frame_ref_.longitude, local_Frame_ref_.altitude);
-    }
-
-    ROS_INFO("timeSyncNmeaMsg:");
-    ROS_INFO("time_sync_nmea_msg_ :%s \n",
-              time_sync_nmea_msg_.sentence.data());
-    ROS_INFO("timeSyncGpsUtc:");
-    ROS_INFO("time_sync_gps_utc_(timestamp,UTCTimeData):%d, %s \n",
-              time_sync_gps_utc_.stamp.sec, time_sync_gps_utc_.UTCTimeData.data());
-    ROS_INFO("timeSyncFcUtc:");      
-    ROS_INFO("time_sync_fc_utc_(fc_timestamp_us,fc_utc_yymmdd,fc_utc_hhmmss):%d, %d, %d\n",
-              time_sync_fc_utc_.fc_timestamp_us, time_sync_fc_utc_.fc_utc_yymmdd,time_sync_fc_utc_.fc_utc_hhmmss);
-    ROS_INFO("timeSyncPpsSource:");
-    ROS_INFO("time_sync_pps_source_ :%s\n", time_sync_pps_source_.data.data());
-    if (!userSelectBroadcast)
-    {
-      //5HZ
-        ROS_INFO("if RTK is available:");
-        ROS_INFO("rtkPosition:");
-        ROS_INFO("rtk_position_(latitude, longitude, altitude) :%f, %f, %f \n",
-                rtk_position_.latitude, rtk_position_.longitude, rtk_position_.altitude);
-        ROS_INFO("rtkVelocity:");
-        ROS_INFO("rtk_velocity_(x,y,z) :%f, %f, %f\n", rtk_velocity_.vector.x,
-                rtk_velocity_.vector.y, rtk_velocity_.vector.z);
-        ROS_INFO("rtkYaw:");
-        ROS_INFO("rtk_yaw_: %d\n", rtk_yaw_.data);
-        ROS_INFO("rtkPositionInfo:");
-        ROS_INFO("rtk_position_info_: %d\n", rtk_position_info_.data);
-        ROS_INFO("rtkYawInfo:");
-        ROS_INFO("rtk_yaw_info_: %d\n", rtk_yaw_info_.data);
-        ROS_INFO("rtkConnectionStatus:");
-        ROS_INFO("rtk_connection_status_: %d\n", rtk_connection_status_.data);
-      //50HZ
-        ROS_INFO("velocity:");
-        ROS_INFO("velocity(x,y,z) :%f, %f, %f\n", velocity_.vector.x, velocity_.vector.y,
-                  velocity_.vector.z);
-        ROS_INFO("vo Position:");
-        ROS_INFO("vo_position_(x, y, z ,xHealth, yHealth, zHealth:%f, %f, %f, %d, %d, %d\n ",
-                  vo_position_.x, vo_position_.y, vo_position_.z,
-                  vo_position_.xHealth, vo_position_.yHealth, vo_position_.zHealth);
-        ROS_INFO("displayMode:");
-        ROS_INFO("display_mode_: %d\n", display_mode_.data);
-        ROS_INFO("rcConnectionStatus:");
-        ROS_INFO("rc_connection_status_: %d\n", rc_connection_status_.data);
-        ROS_INFO("flightAnomaly:");
-        if (flight_anomaly_.data && dji_osdk_ros::FlightAnomaly::COMPASS_INSTALLATION_ERROR)
-        {
-           ROS_INFO("COMPASS_INSTALLATION_ERROR\n");
-        }
-        if (flight_anomaly_.data && dji_osdk_ros::FlightAnomaly::IMU_INSTALLATION_ERROR)
-        {
-           ROS_INFO("IMU_INSTALLATION_ERROR\n");
-        }
-      //100HZ
-        ROS_INFO("attitude Info :");
-        ROS_INFO("attitude w: %f",attitude_data_.quaternion.w);
-        ROS_INFO("attitude x: %f",attitude_data_.quaternion.x);
-        ROS_INFO("attitude y: %f",attitude_data_.quaternion.y);
-        ROS_INFO("attitude z: %f\n",attitude_data_.quaternion.z);
-        ROS_INFO("angularRate:");
-        ROS_INFO("angular_rate_(x,y,z) :%f, %f, %f\n", angular_rate_.vector.x,
-                  angular_rate_.vector.y, angular_rate_.vector.z);
-        ROS_INFO("acceleration:");
-        ROS_INFO("acceleration_(x,y,z) :%f, %f, %f\n", acceleration_.vector.x,
-                   acceleration_.vector.y, acceleration_.vector.z);
-      //400HZ
-        ROS_INFO("trigger:");
-        ROS_INFO("trigger_fc_time(if you choose align_time): %d", trigger_.header.stamp.nsec);
-        ROS_INFO("trigger_ros_time: %d", trigger_.time_ref.nsec);
-        ROS_INFO("trigger_time_source: %s", trigger_.source.c_str());
-    }
- */
-
-    // std::cout << "-------\n\n";
+  
     ros::Duration(1).sleep();
 
-    
-
+   
     float latitude = gps_position_.latitude;
     float longitude = gps_position_.longitude;
     float altitude = gps_position_.altitude;
